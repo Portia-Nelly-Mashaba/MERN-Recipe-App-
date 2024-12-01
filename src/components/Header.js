@@ -74,8 +74,8 @@ const Header = () => {
       <div className="image-container">
   <div className="gradient-overlay"></div>
   <img
-    src="https://images.pexels.com/photos/299348/pexels-photo-299348.jpeg?auto=compress&cs=tinysrgb&w=600"
-    alt="Food Background"
+    src="https://images.pexels.com/photos/106877/pexels-photo-106877.jpeg?auto=compress&cs=tinysrgb&w=600"
+    alt="Mzansi Flava"
     className="header-image"
   />
 </div>
