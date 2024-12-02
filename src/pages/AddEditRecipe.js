@@ -59,54 +59,39 @@ const AddEditRecipe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Show an error if category is not selected
     if (!category) {
-      setCategoryErrMessage('Please select Category');
+      setCategoryErrMessage("Please select Category");
       return;
     }
   
-    // Check if all fields are populated
-    const imageValidation = !edit ? imageUrl : true;
-
-if (name && ingredients && instructions && category && prepTime && servings && cookTime && imageUrl) {
-  try {
-    const currentDate = getDate();
-    const userId = localStorage.getItem('userId'); // Fetch user ID from local storage
-
-    if (!userId) {
-      toast.error('User ID not found. Please log in.');
-      return;
-    }
-
-    if (!edit) {
-      const updatedRecipeData = { ...formValue, date: currentDate, userId }; // Include userId
-      const response = await axios.post('http://localhost:2000/recipes', updatedRecipeData);
-
-      if (response.status === 201) {
-        toast.success('Recipe created Successfully');
-        setFormValue(initialState); // Reset form
-        navigate('/home'); // Navigate to home
-      } else {
-        toast.error('Something went wrong. Please try again.');
+    try {
+      const userId = localStorage.getItem("userId"); // Fetch user ID from local storage
+      if (!userId) {
+        toast.error("User ID not found. Please log in.");
+        return;
       }
-    } else {
-      const response = await axios.put(`http://localhost:2000/recipes/${id}`, formValue);
-
-      if (response.status === 200) {
-        toast.success('Recipe Updated Successfully');
-        setFormValue(initialState); 
-        navigate('/home'); 
+  
+      if (!edit) {
+        const response = await axios.post("http://localhost:8080/api/v1/recipes", { ...formValue, userId });
+        if (response.status === 201) {
+          toast.success("Recipe created successfully");
+          setFormValue(initialState);
+          navigate("/home");
+        }
       } else {
-        toast.error('Something went wrong. Please try again.');
+        const response = await axios.put(`http://localhost:8080/api/v1/recipes/${id}`, formValue);
+        if (response.status === 200) {
+          toast.success("Recipe updated successfully");
+          setFormValue(initialState);
+          navigate("/home");
+        }
       }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred. Please try again.");
     }
-  } catch (error) {
-    console.error('Error:', error);
-    toast.error('An error occurred. Please try again.');
-  }
-}
-  }
-
+  };
+  
         
  
   
