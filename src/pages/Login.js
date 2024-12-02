@@ -11,24 +11,32 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:2000/users');
-      const users = await response.json();
-
-      const user = users.find((user) => user.email === email && user.password === password);
-
-      if (user) {
+      const response = await fetch('http://localhost:8080/api/v1/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
         setMessage('Login successful!');
-        localStorage.setItem('isAuthenticated', 'true'); 
-        localStorage.setItem('userId', user.id);
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userId', data._id); // Save user ID
+        localStorage.setItem('userName', data.email); // Adjust key if needed
         navigate('/home');
       } else {
-        setMessage('Invalid email or password. Please try again.');
+        const error = await response.json();
+        setMessage(error.error || 'Invalid email or password.');
       }
     } catch (error) {
       console.error('Error:', error);
       setMessage('An error occurred. Please try again later.');
     }
   };
+  
+  
 
   return (
     <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>

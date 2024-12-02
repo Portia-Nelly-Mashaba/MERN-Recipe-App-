@@ -7,9 +7,9 @@ const router = express.Router()
 
 router.post('/user', usersController.registerUser)
 router.post('/user/login', usersController.loginUser)
-router.post('/recipes', protect, recipeController.createRecipe)
+router.post('/recipes',  recipeController.createRecipe)
 router.get('/recipes', protect, recipeController.getRecipes)
-router.get('/recipe/:id', protect, recipeController.getSingleRecipe)
+router.get('/recipe/:id', recipeController.getSingleRecipe)
 
 
 export default router;

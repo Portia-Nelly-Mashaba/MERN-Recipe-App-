@@ -1,15 +1,29 @@
 import Recipe from "../model/recipes.js";
 
+// const createRecipe = async (req, res) => {
+//   try {
+//     const newRecipe = await Recipe.create(req.body);
+//     res.status(201).json(newRecipe);
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ error: "An error occured while create the new recipe" });
+//   }
+// };
+
 const createRecipe = async (req, res) => {
-  try {
-    const newRecipe = await Recipe.create(req.body);
-    res.status(201).json(newRecipe);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "An error occured while create the new recipe" });
-  }
-};
+    try {
+      const { userId, ...recipeData } = req.body; // Extract userId and recipe data
+      if (!userId) {
+        return res.status(400).json({ error: "User ID is required" });
+      }
+      const newRecipe = await Recipe.create({ ...recipeData, userId });
+      res.status(201).json(newRecipe);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while creating the recipe" });
+    }
+  };
 
 const getRecipes  = async (req, res) => {
     try {

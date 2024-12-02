@@ -12,32 +12,37 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:2000/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-        }),
-      });
+        const response = await fetch('http://localhost:8080/api/v1/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password,
+            }),
+        });
 
-      if (response.ok) {
-        const user = await response.json(); // Assuming the API returns the user object
-        localStorage.setItem('user', JSON.stringify(user)); // Store user in local storage
-        setMessage('Registration successful!');
-        navigate('/home'); // Navigate to home page
-      } else {
-        setMessage('Registration failed. Please try again.');
-      }
+        console.log(response);
+
+        if (response.ok) {
+            const user = await response.json();
+            localStorage.setItem('user', JSON.stringify(user));
+            setMessage('Registration successful!');
+            navigate('/home');
+        } else {
+            const errorData = await response.json();
+            console.error('Error response:', errorData);
+            setMessage(errorData.error || 'Registration failed. Please try again.');
+        }
     } catch (error) {
-      console.error('Error:', error);
-      setMessage('An error occurred. Please try again later.');
+        console.error('Error:', error);
+        setMessage('An error occurred. Please try again later.');
     }
-  };
+};
 
+  
   return (
     <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>
       <div className="container py-5 vh-70">

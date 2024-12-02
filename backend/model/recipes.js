@@ -37,10 +37,11 @@ const recipeSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    userId: {
-        type: String,
-        required: true
-    }
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users", 
+        required: true 
+    },
 });
 
 export default mongoose.model('Recipes', recipeSchema)

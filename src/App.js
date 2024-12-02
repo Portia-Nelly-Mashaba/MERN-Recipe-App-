@@ -49,7 +49,11 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
+          <Route path="/home" element={<Home />} />
+          <Route path="/add-recipe" element={<AddEditRecipe />} />
+          <Route path="/edit/:id" element={<AddEditRecipe />} />
+          <Route path="/recipe/:id" element={<SingleRecipe />} />
+          {/* <Route
             path="/home"
             element={
               <ProtectedRoutes
@@ -57,9 +61,10 @@ function App() {
                 element={<Home />}
               />
             }
-          />
+          /> */}
+          
 
-          <Route
+          {/* <Route
             path="/add-recipe"
             element={
               <ProtectedRoutes
@@ -67,9 +72,9 @@ function App() {
                 element={<AddEditRecipe />}
               />
             }
-          />
+          /> */}
 
-          <Route
+          {/* <Route
             path="/edit/:id"
             element={
               <ProtectedRoutes
@@ -77,9 +82,9 @@ function App() {
                 element={<AddEditRecipe />}
               />
             }
-          />
+          /> */}
 
-          <Route
+          {/* <Route
             path="/recipe/:id"
             element={
               <ProtectedRoutes
@@ -87,7 +92,7 @@ function App() {
                 element={<SingleRecipe />}
               />
             }
-          />
+          /> */}
 
           <Route path="*" element={<NotFound />} />
         </Routes>
