@@ -1,4 +1,5 @@
 import Recipe from "../model/recipes.js";
+import mongoose from "mongoose";
 
 // const createRecipe = async (req, res) => {
 //   try {
@@ -25,35 +26,40 @@ const createRecipe = async (req, res) => {
     }
   };
 
-const getRecipes  = async (req, res) => {
+  const getRecipes = async (req, res) => {
     try {
-        const {page = 1, limit = 5} = req.query;
-        const skip = (page - 1) * limit;
-        const recipes = await Recipe.find().skip(skip).limit(limit)
+        const userId = req.query.userId; // Extract userId from query parameters
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" }); // Validate userId
+        }
 
-        const totalRecipes = await Recipe.countDocuments()
-
-        res.status(200).json({recipes, totalRecipes, page, limit})
-    
+        const recipes = await Recipe.find({ userId }); // Filter recipes by userId
+        res.status(200).json(recipes); // Return filtered recipes
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "An error ocured while fetching recipes"})
+        res.status(500).json({ error: "An error occurred while fetching recipes" });
     }
-}
+};
+
 
 const getSingleRecipe = async (req, res) => {
     try {
-        const recipeId = await req.params.id
-        const recipe = await Recipe.findById(recipeId)
-        res.status(200).json(recipe)
-    } catch (error){
-        if(error.kind === 'ObjectId'){
-            res.status(400).json({error: "Invalid Recipe ID"})
-        } else {
-            return res.status(500).json({error: "An error occured while fetching the recipe"})
+        const recipeId = req.params._id;
+        if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+            return res.status(400).json({ error: "Invalid Recipe ID format" });
         }
+
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found" });
+        }
+
+        res.status(200).json(recipe);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching the recipe" });
     }
-}
+};
 
 export default {
     createRecipe,

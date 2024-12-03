@@ -27,21 +27,28 @@ const Home = ({ userId }) => {
   }, []);
 
   // Load all recipes
-  const loadRecipeData = async () => {
-    try {
-      const response = await axios.get('http://localhost:2000/recipes');
-      if (response.status === 200) {
-        const userRecipes = response.data.filter(recipe => recipe.userId === userId);
-        setData(userRecipes);
-        setFilteredData(userRecipes); // Initially show all data
-      } else {
-        toast.error('Something went wrong!');
-      }
-    } catch (error) {
-      toast.error('Failed to fetch recipes.');
-      console.error(error);
+// Home.js
+const loadRecipeData = async () => {
+  try {
+    const userId = localStorage.getItem('userId'); // Retrieve userId from local storage
+    if (!userId) {
+      toast.error('User ID is missing. Please log in.');
+      return;
     }
-  };
+
+    const response = await axios.get(`http://localhost:8080/api/v1/recipes?userId=${userId}`); // Pass userId as a query param
+    if (response.status === 200) {
+      setData(response.data); // Update state with filtered recipes
+      setFilteredData(response.data); // Initially show all data
+    } else {
+      toast.error('Something went wrong!');
+    }
+  } catch (error) {
+    toast.error('Failed to fetch recipes.');
+    console.error(error);
+  }
+};
+
 
   // Handle category selection
   const handleCategory = (category) => {
@@ -77,7 +84,7 @@ const Home = ({ userId }) => {
 
   // Truncate long strings
   const excerpt = (str) => {
-    return str.length > 60 ? str.substring(0, 60) + '...' : str;
+    return str.length > 60 ? str.substring(0, 70) + '...' : str;
   };
 
   return (

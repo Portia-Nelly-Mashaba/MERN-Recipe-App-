@@ -7,40 +7,48 @@ import Badge from '../components/Badge';
 const SingleRecipe = () => {
   const [recipe, setRecipe] = useState(null); // Default to null
   const { id } = useParams();
+console.log('Fetched ID:', id);
 
   useEffect(() => {
+    console.log('Fetched ID:', id); // Debugging
     if (id) {
-      getSingleRecipe();
+        getSingleRecipe();
     }
-  }, [id]);
+}, [id]);
 
-  const getSingleRecipe = async () => {
-    try {
-      const response = await axios.get(`http://localhost:2000/recipes/${id}`);
+
+const getSingleRecipe = async () => {
+  try {
+      const response = await axios.get(`http://localhost:8080/api/v1/recipes/${id}`);
       if (response.status === 200) {
-        setRecipe(response.data);
+          setRecipe(response.data); // Set recipe data if found
       } else {
-        toast.error('Something went wrong');
+          toast.error('Recipe not found');
       }
-    } catch (error) {
-      toast.error('Error fetching recipe: ' + error.message);
-    }
-  };
+  } catch (error) {
+      if (error.response && error.response.status === 404) {
+          toast.error('Recipe not found');
+      } else {
+          toast.error('Error fetching recipe: ' + error.message);
+      }
+  }
+};
+
 
   // Render loading state while `recipe` is null
   if (!recipe) {
     return <div>Loading...</div>;
   }
 
-  // Split ingredients and instructions by newline character, filter empty items, and map to list items
+  // Split ingredients and instructions into lists
   const ingredientsList = recipe.ingredients
     .split('\n')
-    .filter((item) => item.trim() !== '') // Filter out empty lines
+    .filter((item) => item.trim() !== '') // Remove empty lines
     .map((item, index) => <li key={index}>{item}</li>);
 
   const instructionsList = recipe.instructions
     .split('\n')
-    .filter((item) => item.trim() !== '') // Filter out empty lines
+    .filter((item) => item.trim() !== '') // Remove empty lines
     .map((item, index) => <li key={index}>{item}</li>);
 
   return (
@@ -57,7 +65,7 @@ const SingleRecipe = () => {
                 />
                 <div className="ms-2">
                   <small>Posted</small>
-                  <small className="text-muted"> · {recipe.date} </small>
+                  <small className="text-muted"> · {recipe.createdAt} </small>
                 </div>
               </div>
               <h1 className="fw-bold">{recipe.name}</h1>
@@ -72,7 +80,6 @@ const SingleRecipe = () => {
                   style={{width: '100%', maxHeight: '600px', objectFit: 'cover'}}
                 />
               </div>
-
               <div className="mt-4">
                 <div className="d-flex align-items-center">
                   <h4 className="flex-grow-1">Recipe Details</h4>
