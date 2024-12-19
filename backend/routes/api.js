@@ -10,6 +10,8 @@ router.post('/user/login', usersController.loginUser)
 router.post('/recipes',  recipeController.createRecipe)
 router.get('/recipes',  recipeController.getRecipes)
 router.get('/recipe/:id', recipeController.getSingleRecipe)
+router.put("/recipes/:id", recipeController.editRecipe)
+router.delete('/recipes/:id', recipeController.deleteRecipe);
 
 
 export default router;

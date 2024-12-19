@@ -2,12 +2,26 @@ import React from 'react';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Badge from './Badge';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const formatDate = (isoDate) => {
   const date = new Date(isoDate);
   return date.toLocaleDateString('en-GB'); // Formats as DD-MM-YYYY
 };
 const Card = ({ name, ingredients, instructions, category, imageUrl, handleDelete, createdAt, _id }) => {
+  const onDelete = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/api/v1/recipes/${id}`);
+      if (response.status === 200) {
+        toast.success("Recipe deleted successfully");
+        handleDelete(); // Notify the parent to update the UI
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while deleting the recipe");
+    }
+  };
   return (
     <div className="card p-2 shadow-sm" style={{ maxWidth: '450px' }}>
       <img
@@ -51,7 +65,7 @@ _id}`} style={{ textDecoration: 'none', color: 'blue' }}>
         <span><Badge>{category}</Badge></span>
         <div className="d-flex align-items-center">
           <button
-          onClick={() => handleDelete(_id)}
+          onClick={() => onDelete(_id)}
             className="btn"
             style={{ border: 'none', background: 'transparent', padding: 0 }}
           >

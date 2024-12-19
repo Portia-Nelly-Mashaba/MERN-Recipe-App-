@@ -6,34 +6,31 @@ import Badge from '../components/Badge';
 
 const SingleRecipe = () => {
   const [recipe, setRecipe] = useState(null); // Default to null
-  const { id } = useParams();
-console.log('Fetched ID:', id);
+  const { id } = useParams(); // Fetch recipe ID from URL parameters
 
   useEffect(() => {
     console.log('Fetched ID:', id); // Debugging
     if (id) {
-        getSingleRecipe();
+      getSingleRecipe();
     }
-}, [id]);
+  }, [id]);
 
-
-const getSingleRecipe = async () => {
-  try {
-      const response = await axios.get(`http://localhost:8080/api/v1/recipes/${id}`);
+  const getSingleRecipe = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/recipe/${id}`);
       if (response.status === 200) {
-          setRecipe(response.data); // Set recipe data if found
+        setRecipe(response.data); // Set recipe data if found
       } else {
-          toast.error('Recipe not found');
+        toast.error('Recipe not found'); // Show error if recipe is not found
       }
-  } catch (error) {
+    } catch (error) {
       if (error.response && error.response.status === 404) {
-          toast.error('Recipe not found');
+        toast.error('Recipe not found'); // Handle 404 error
       } else {
-          toast.error('Error fetching recipe: ' + error.message);
+        toast.error('Error fetching recipe: ' + error.message); // Handle other errors
       }
-  }
-};
-
+    }
+  };
 
   // Render loading state while `recipe` is null
   if (!recipe) {
@@ -65,7 +62,7 @@ const getSingleRecipe = async () => {
                 />
                 <div className="ms-2">
                   <small>Posted</small>
-                  <small className="text-muted"> · {recipe.createdAt} </small>
+                  <small className="text-muted"> · {new Date(recipe.createdAt).toLocaleDateString()}</small>
                 </div>
               </div>
               <h1 className="fw-bold">{recipe.name}</h1>
@@ -76,8 +73,8 @@ const getSingleRecipe = async () => {
                 <img
                   src={recipe.imageUrl}
                   alt={recipe.name}
-                  className="img-fluid rounded" 
-                  style={{width: '100%', maxHeight: '600px', objectFit: 'cover'}}
+                  className="img-fluid rounded"
+                  style={{ width: '100%', maxHeight: '600px', objectFit: 'cover' }}
                 />
               </div>
               <div className="mt-4">

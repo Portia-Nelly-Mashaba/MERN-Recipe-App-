@@ -27,6 +27,7 @@ const AddEditRecipe = () => {
   const {id} =useParams();
 
   useEffect(() => {
+    console.log("Incoming Recipe ID from useParams:", id); 
     if(id) {
       setEdit(true)
       getSingleRecipe(id)
@@ -37,14 +38,21 @@ const AddEditRecipe = () => {
   }, [])
 
   const getSingleRecipe = async (id) => {
-    const singleRecipe = await axios.get(`http://localhost:2000/recipes/${id}`);
-    if (singleRecipe.status === 200) {
-      setFormValue({...singleRecipe.data});
-    } else {
-      toast.error("Something went wrong");
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/recipe/${id}`);
+      if (response.status === 200) {
+        setFormValue({ ...response.data });
+      } else {
+        toast.error("Recipe not found");
+        navigate("/home");
+      }
+    } catch (error) {
+      toast.error("Unable to fetch the recipe. Please try again.");
+      console.error(error);
+      navigate("/home");
     }
-   
-  }
+  };
+  
 
   const getDate = () => {
     let today = new Date();

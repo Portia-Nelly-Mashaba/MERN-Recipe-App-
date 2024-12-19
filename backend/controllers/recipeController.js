@@ -44,7 +44,7 @@ const createRecipe = async (req, res) => {
 
 const getSingleRecipe = async (req, res) => {
     try {
-        const recipeId = req.params._id;
+        const recipeId = req.params.id;
         if (!mongoose.Types.ObjectId.isValid(recipeId)) {
             return res.status(400).json({ error: "Invalid Recipe ID format" });
         }
@@ -61,8 +61,59 @@ const getSingleRecipe = async (req, res) => {
     }
 };
 
+
+const editRecipe = async (req, res) => {
+    try {
+      const recipeId = req.params.id;
+  
+      // Validate Recipe ID format
+      if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+        return res.status(400).json({ error: "Invalid Recipe ID format" });
+      }
+  
+      const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, {
+        new: true, // Return the updated document
+        runValidators: true, // Ensure schema validation
+      });
+  
+      if (!updatedRecipe) {
+        return res.status(404).json({ error: "Recipe not found" });
+      }
+  
+      res.status(200).json(updatedRecipe);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while updating the recipe" });
+    }
+  };
+  
+
+  const deleteRecipe = async (req, res) => {
+    try {
+      const recipeId = req.params.id;
+  
+      // Validate Recipe ID format
+      if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+        return res.status(400).json({ error: "Invalid Recipe ID format" });
+      }
+  
+      const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+  
+      if (!deletedRecipe) {
+        return res.status(404).json({ error: "Recipe not found" });
+      }
+  
+      res.status(200).json({ message: "Recipe deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while deleting the recipe" });
+    }
+  };
+
 export default {
     createRecipe,
     getRecipes,
-    getSingleRecipe
+    getSingleRecipe,
+    editRecipe,
+    deleteRecipe
 };

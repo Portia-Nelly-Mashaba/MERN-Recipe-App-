@@ -23,6 +23,7 @@ const Layout = ({ children }) => {
     "/add-recipe",
     "/edit",
     "/recipe",
+
   ];
 
   // Check if the current path matches or starts with any hideHeaderPath

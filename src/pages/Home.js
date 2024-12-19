@@ -10,6 +10,7 @@ const Home = ({ userId }) => {
   const [data, setData] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [filteredData, setFilteredData] = useState([]);
+  const [recipes, setRecipes] = useState(filteredData);
 
   const options = [
     { label: 'All', value: 'all' },
@@ -82,6 +83,11 @@ const loadRecipeData = async () => {
     }
   };
 
+  const handleDelete = (id) => {
+    const updatedRecipes = recipes.filter((recipe) => recipe._id !== id);
+    setRecipes(updatedRecipes);
+  };
+
   // Truncate long strings
   const excerpt = (str) => {
     return str.length > 60 ? str.substring(0, 70) + '...' : str;
@@ -119,7 +125,7 @@ const loadRecipeData = async () => {
             {...item}
             ingredients={excerpt(item.ingredients)}
             instructions={excerpt(item.instructions)}
-            handleDelete={() => console.log(`Delete ${item.id}`)}
+            handleDelete={() => handleDelete(item._id)}
           />
         ))}
       </div>
