@@ -1,13 +1,13 @@
 # Recipe App
 
-This project is a **Recipe App** built using **Express**, **Node.js**, **MongoDB**, and **React.js**. The application allows users to perform CRUD (Create, Read, Update, Delete) operations on recipes. It features user authentication and supports managing a collection of recipes with categories, images, and preparation details.
+This project is a **Recipe App** built using **MongoDB**, **Node.js**, **Express**, and **React.js**. The application allows users to perform CRUD (Create, Read, Update, Delete) operations on recipes. It features user authentication and supports managing a collection of recipes with categories, images, and preparation details.
 
 ---
 
 ## Features
 
 ### Backend
-- **Framework**: Express.js
+- **Framework**: Node.js with Express.js
 - **Database**: MongoDB
 - **Features**:
   - User authentication (registration and login).
@@ -148,8 +148,8 @@ To deploy the app:
 ---
 
 ## Acknowledgments
-- **Express** for backend routing.
 - **MongoDB** for database management.
+- **Node.js & Express** for backend services.
 - **React.js** for a responsive frontend.
 - **Cloudinary** for image uploads.
 
